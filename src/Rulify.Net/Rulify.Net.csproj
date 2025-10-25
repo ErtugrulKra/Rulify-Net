@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    
+    <!-- NuGet Package Metadata -->
+    <PackageId>Rulify.Net</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Ertugrul Kara</Authors>
+    <Company>Ertugrul Kara</Company>
+    <Description>A powerful and flexible rule engine for .NET applications. Supports dynamic rules, priority-based execution, async operations, and collection evaluation. Developed by Ertugrul Kara.</Description>
+    <PackageProjectUrl>https://github.com/ErtugrulKra/Rulify.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ErtugrulKra/Rulify.Net</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>rule;engine;validation;business-rules;async;dynamic</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright (c) 2024 Ertugrul Kara</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>../../nupkgs</PackageOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+    <None Include="../../LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
