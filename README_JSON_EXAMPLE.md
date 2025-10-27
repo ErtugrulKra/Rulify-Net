@@ -1,4 +1,4 @@
-# JSON/YAML Rule Import for Rulify.Net
+# JSON Rule Import for Rulify.Net
 
 This document explains Rulify.Net's new JSON/YAML rule import feature.
 
