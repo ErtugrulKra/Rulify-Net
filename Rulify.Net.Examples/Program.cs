@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Rulify.Net;
 
@@ -14,6 +15,18 @@ namespace Rulify.Net.Examples
         {
             Console.WriteLine("Rulify.Net Example Usage");
             Console.WriteLine("=======================");
+
+            // JSON rules example
+            await JsonRulesExample.RunExample();
+
+            Console.WriteLine("\n\nPress any key to continue to performance test...");
+            Console.ReadKey();
+
+            //Performance test -1000 booking combinations
+            await JsonRulesExample.RunPerformanceTest();
+
+            Console.WriteLine("\n\nPress any key to continue to other examples...");
+            Console.ReadKey();
 
             // Basic usage example
             await BasicExample();
@@ -34,7 +47,7 @@ namespace Rulify.Net.Examples
             await EventMonitoringExample();
         }
 
-        private static async Task BasicExample()
+        private static Task BasicExample()
         {
             Console.WriteLine("1. Basic Usage Example:");
             Console.WriteLine("----------------------");
@@ -73,6 +86,8 @@ namespace Rulify.Net.Examples
                     Console.WriteLine($"  {status} - {result.ErrorMessage ?? "Success"}");
                 }
             }
+
+            return Task.CompletedTask;
         }
 
         private static async Task AsyncRulesExample()
@@ -118,7 +133,7 @@ namespace Rulify.Net.Examples
             }
         }
 
-        private static async Task CollectionEvaluationExample()
+        private static Task CollectionEvaluationExample()
         {
             Console.WriteLine("3. Collection Evaluation Example:");
             Console.WriteLine("---------------------------------");
@@ -156,9 +171,11 @@ namespace Rulify.Net.Examples
                     Console.WriteLine($"  {status} - {result.ErrorMessage ?? "Success"}");
                 }
             }
+
+            return Task.CompletedTask;
         }
 
-        private static async Task EventMonitoringExample()
+        private static Task EventMonitoringExample()
         {
             Console.WriteLine("4. Event Monitoring Example:");
             Console.WriteLine("-----------------------------");
@@ -204,6 +221,8 @@ namespace Rulify.Net.Examples
             var results = engine.Evaluate("test");
 
             Console.WriteLine($"\nTotal rules executed: {results.Count()}");
+
+            return Task.CompletedTask;
         }
     }
 }
