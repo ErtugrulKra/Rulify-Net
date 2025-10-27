@@ -87,7 +87,93 @@ namespace Rulify.Net.Examples
                 }
             }
 
+            // Calculation-based rules example
+            Console.WriteLine("\n\nCalculation-based Rules Example:");
+            Console.WriteLine("--------------------------------");
+
+            var calculationEngine = new RuleEngine<Order>();
+
+            // Add a discount calculation rule
+            calculationEngine.AddRule(new DelegateRule<Order>(
+                "discount-calculation",
+                "Discount Calculation",
+                order =>
+                {
+                    // Calculate discount based on order total
+                    var discount = 0.0;
+                    if (order.Total >= 1000)
+                        discount = order.Total * 0.15; // 15% discount for orders >= 1000
+                    else if (order.Total >= 500)
+                        discount = order.Total * 0.10; // 10% discount for orders >= 500
+                    else if (order.Total >= 100)
+                        discount = order.Total * 0.05; // 5% discount for orders >= 100
+
+                    var finalTotal = order.Total - discount;
+
+                    return RuleResult.Success(new Dictionary<string, object>
+                    {
+                        { "originalTotal", order.Total },
+                        { "discount", discount },
+                        { "finalTotal", finalTotal },
+                        { "discountPercentage", order.Total > 0 ? (discount / order.Total * 100) : 0 }
+                    });
+                },
+                "Calculates discount based on order total",
+                priority: 1
+            ));
+
+            // Add a free shipping calculation rule
+            calculationEngine.AddRule(new DelegateRule<Order>(
+                "free-shipping-calculation",
+                "Free Shipping Calculation",
+                order =>
+                {
+                    // Free shipping if order total >= 200
+                    var shippingCost = order.Total >= 200 ? 0 : 15.0;
+
+                    return RuleResult.Success(new Dictionary<string, object>
+                    {
+                        { "shippingCost", shippingCost },
+                        { "qualifiesForFreeShipping", order.Total >= 200 }
+                    });
+                },
+                "Determines if order qualifies for free shipping",
+                priority: 2
+            ));
+
+            // Test calculation rules with different orders
+            var testOrders = new[]
+            {
+                new Order { Total = 50 },
+                new Order { Total = 150 },
+                new Order { Total = 600 },
+                new Order { Total = 1200 }
+            };
+
+            foreach (var order in testOrders)
+            {
+                Console.WriteLine($"\nOrder with total: ${order.Total:F2}");
+                var results = calculationEngine.Evaluate(order);
+
+                foreach (var result in results)
+                {
+                    if (result.IsSuccess && result.Data.ContainsKey("finalTotal"))
+                    {
+                        Console.WriteLine($"  Original Total: ${result.Data["originalTotal"]:F2}");
+                        Console.WriteLine($"  Discount: ${result.Data["discount"]:F2} ({result.Data["discountPercentage"]:F1}%)");
+                        Console.WriteLine($"  Final Total: ${result.Data["finalTotal"]:F2}");
+                        Console.WriteLine($"  Shipping Cost: ${results.FirstOrDefault(r => r.Data.ContainsKey("shippingCost"))?.Data["shippingCost"] ?? 0:F2}");
+                        Console.WriteLine($"  Free Shipping: {(results.FirstOrDefault(r => r.Data.ContainsKey("qualifiesForFreeShipping"))?.Data["qualifiesForFreeShipping"] ?? false)}");
+                    }
+                }
+            }
+
             return Task.CompletedTask;
+        }
+
+        private class Order
+        {
+            public double Total { get; set; }
         }
 
         private static async Task AsyncRulesExample()
@@ -148,7 +234,7 @@ namespace Rulify.Net.Examples
                 "Validates positive numbers",
                 priority: 1
             ));
-
+             
             engine.AddRule(new DelegateRule<int>(
                 "range-check",
                 "Range Check",
@@ -156,6 +242,7 @@ namespace Rulify.Net.Examples
                 "Validates number range",
                 priority: 2
             ));
+
 
             var numbers = new[] { -5, 0, 25, 50, 150 };
 
