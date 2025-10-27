@@ -7,14 +7,14 @@
     
     <!-- NuGet Package Metadata -->
     <PackageId>Rulify.Net</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <Authors>Ertugrul Kara</Authors>
     <Company>Ertugrul Kara</Company>
-    <Description>A powerful and flexible rule engine for .NET applications. Supports dynamic rules, priority-based execution, async operations, and collection evaluation. Developed by Ertugrul Kara.</Description>
+    <Description>A powerful and flexible rule engine for .NET applications. Supports dynamic rules, JSON/YAML import, priority-based execution, async operations, and collection evaluation. Developed by Ertugrul Kara.</Description>
     <PackageProjectUrl>https://github.com/ErtugrulKra/Rulify.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ErtugrulKra/Rulify.Net</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>rule;engine;validation;business-rules;async;dynamic</PackageTags>
+    <PackageTags>rule;engine;validation;business-rules;async;dynamic;json;yaml</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Copyright>Copyright (c) 2024 Ertugrul Kara</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
