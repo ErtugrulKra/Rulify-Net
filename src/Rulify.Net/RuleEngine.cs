@@ -181,6 +181,138 @@ namespace Rulify.Net
         }
 
         /// <summary>
+        /// Evaluates rules until the first failure is encountered
+        /// </summary>
+        /// <param name="context">The context to evaluate against</param>
+        /// <returns>A collection of rule results up to and including the first failure</returns>
+        public IEnumerable<RuleResult> EvaluateUntilFirstFailure(TContext context)
+        {
+            var rules = GetRules();
+            var results = new List<RuleResult>();
+
+            foreach (var rule in rules)
+            {
+                OnRuleEvaluating(rule, context);
+                
+                var result = rule.Evaluate(context);
+                results.Add(result);
+                
+                OnRuleEvaluated(rule, context, result);
+
+                // Stop evaluation if rule failed
+                if (!result.IsSuccess)
+                {
+                    break;
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Evaluates rules asynchronously until the first failure is encountered
+        /// </summary>
+        /// <param name="context">The context to evaluate against</param>
+        /// <returns>A task that represents the asynchronous evaluation</returns>
+        public async Task<IEnumerable<RuleResult>> EvaluateUntilFirstFailureAsync(TContext context)
+        {
+            var rules = GetRules();
+            var results = new List<RuleResult>();
+
+            foreach (var rule in rules)
+            {
+                OnRuleEvaluating(rule, context);
+                
+                RuleResult result;
+                if (rule.IsAsync)
+                {
+                    result = await rule.EvaluateAsync(context);
+                }
+                else
+                {
+                    result = rule.Evaluate(context);
+                }
+                
+                results.Add(result);
+                OnRuleEvaluated(rule, context, result);
+
+                // Stop evaluation if rule failed
+                if (!result.IsSuccess)
+                {
+                    break;
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Evaluates rules until the first success is encountered
+        /// </summary>
+        /// <param name="context">The context to evaluate against</param>
+        /// <returns>A collection of rule results up to and including the first success</returns>
+        public IEnumerable<RuleResult> EvaluateUntilFirstSuccess(TContext context)
+        {
+            var rules = GetRules();
+            var results = new List<RuleResult>();
+
+            foreach (var rule in rules)
+            {
+                OnRuleEvaluating(rule, context);
+                
+                var result = rule.Evaluate(context);
+                results.Add(result);
+                
+                OnRuleEvaluated(rule, context, result);
+
+                // Stop evaluation if rule succeeded
+                if (result.IsSuccess)
+                {
+                    break;
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Evaluates rules asynchronously until the first success is encountered
+        /// </summary>
+        /// <param name="context">The context to evaluate against</param>
+        /// <returns>A task that represents the asynchronous evaluation</returns>
+        public async Task<IEnumerable<RuleResult>> EvaluateUntilFirstSuccessAsync(TContext context)
+        {
+            var rules = GetRules();
+            var results = new List<RuleResult>();
+
+            foreach (var rule in rules)
+            {
+                OnRuleEvaluating(rule, context);
+                
+                RuleResult result;
+                if (rule.IsAsync)
+                {
+                    result = await rule.EvaluateAsync(context);
+                }
+                else
+                {
+                    result = rule.Evaluate(context);
+                }
+                
+                results.Add(result);
+                OnRuleEvaluated(rule, context, result);
+
+                // Stop evaluation if rule succeeded
+                if (result.IsSuccess)
+                {
+                    break;
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
         /// Raises the RuleEvaluating event
         /// </summary>
         /// <param name="rule">The rule being evaluated</param>

@@ -45,6 +45,11 @@ namespace Rulify.Net.Examples
 
             // Event monitoring example
             await EventMonitoringExample();
+
+            Console.WriteLine();
+
+            // Early exit evaluation example
+            await EarlyExitExample();
         }
 
         private static Task BasicExample()
@@ -310,6 +315,87 @@ namespace Rulify.Net.Examples
             Console.WriteLine($"\nTotal rules executed: {results.Count()}");
 
             return Task.CompletedTask;
+        }
+
+        private static async Task EarlyExitExample()
+        {
+            Console.WriteLine("5. Early Exit Evaluation Example:");
+            Console.WriteLine("---------------------------------");
+
+            var engine = new RuleEngine<string>();
+
+            // Add multiple validation rules
+            engine.AddRule(new DelegateRule<string>(
+                "length-check",
+                "Length Check",
+                context => context.Length >= 5 ? RuleResult.Success() : RuleResult.Failure("String must be at least 5 characters long"),
+                "Validates minimum string length",
+                priority: 1
+            ));
+
+            engine.AddRule(new DelegateRule<string>(
+                "uppercase-check",
+                "Uppercase Check",
+                context => context.Any(char.IsUpper) ? RuleResult.Success() : RuleResult.Failure("String must contain at least one uppercase letter"),
+                "Validates presence of uppercase letters",
+                priority: 2
+            ));
+
+            engine.AddRule(new DelegateRule<string>(
+                "number-check",
+                "Number Check",
+                context => context.Any(char.IsDigit) ? RuleResult.Success() : RuleResult.Failure("String must contain at least one number"),
+                "Validates presence of numbers",
+                priority: 3
+            ));
+
+            engine.AddRule(new DelegateRule<string>(
+                "special-char-check",
+                "Special Character Check",
+                context => context.Any(c => !char.IsLetterOrDigit(c)) ? RuleResult.Success() : RuleResult.Failure("String must contain at least one special character"),
+                "Validates presence of special characters",
+                priority: 4
+            ));
+
+            var testString = "hi";
+
+            Console.WriteLine($"\nTesting with: '{testString}'");
+            Console.WriteLine("\nStandard evaluation (all rules):");
+            var allResults = engine.Evaluate(testString);
+            Console.WriteLine($"  Total rules executed: {allResults.Count()}");
+            foreach (var result in allResults)
+            {
+                var status = result.IsSuccess ? "PASS" : "FAIL";
+                Console.WriteLine($"    {status} - {result.ErrorMessage ?? "Success"}");
+            }
+
+            Console.WriteLine("\nEarly exit on first failure:");
+            var failureResults = engine.EvaluateUntilFirstFailure(testString);
+            Console.WriteLine($"  Total rules executed: {failureResults.Count()}");
+            foreach (var result in failureResults)
+            {
+                var status = result.IsSuccess ? "PASS" : "FAIL";
+                Console.WriteLine($"    {status} - {result.ErrorMessage ?? "Success"}");
+            }
+
+            Console.WriteLine("\nEarly exit on first success:");
+            var successResults = engine.EvaluateUntilFirstSuccess(testString);
+            Console.WriteLine($"  Total rules executed: {successResults.Count()}");
+            foreach (var result in successResults)
+            {
+                var status = result.IsSuccess ? "PASS" : "FAIL";
+                Console.WriteLine($"    {status} - {result.ErrorMessage ?? "Success"}");
+            }
+
+            // Async example
+            Console.WriteLine("\n\nAsync early exit example:");
+            var asyncFailureResults = await engine.EvaluateUntilFirstFailureAsync("Hello123!");
+            Console.WriteLine($"  Total rules executed: {asyncFailureResults.Count()}");
+            foreach (var result in asyncFailureResults)
+            {
+                var status = result.IsSuccess ? "PASS" : "FAIL";
+                Console.WriteLine($"    {status} - {result.ErrorMessage ?? "Success"}");
+            }
         }
     }
 }

@@ -61,5 +61,33 @@ namespace Rulify.Net
         /// Clears all rules from the engine
         /// </summary>
         void ClearRules();
+
+        /// <summary>
+        /// Evaluates rules until the first failure is encountered
+        /// </summary>
+        /// <param name="context">The context to evaluate against</param>
+        /// <returns>A collection of rule results up to and including the first failure</returns>
+        IEnumerable<RuleResult> EvaluateUntilFirstFailure(TContext context);
+
+        /// <summary>
+        /// Evaluates rules asynchronously until the first failure is encountered
+        /// </summary>
+        /// <param name="context">The context to evaluate against</param>
+        /// <returns>A task that represents the asynchronous evaluation</returns>
+        Task<IEnumerable<RuleResult>> EvaluateUntilFirstFailureAsync(TContext context);
+
+        /// <summary>
+        /// Evaluates rules until the first success is encountered
+        /// </summary>
+        /// <param name="context">The context to evaluate against</param>
+        /// <returns>A collection of rule results up to and including the first success</returns>
+        IEnumerable<RuleResult> EvaluateUntilFirstSuccess(TContext context);
+
+        /// <summary>
+        /// Evaluates rules asynchronously until the first success is encountered
+        /// </summary>
+        /// <param name="context">The context to evaluate against</param>
+        /// <returns>A task that represents the asynchronous evaluation</returns>
+        Task<IEnumerable<RuleResult>> EvaluateUntilFirstSuccessAsync(TContext context);
     }
 }
